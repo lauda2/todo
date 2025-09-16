@@ -4,10 +4,14 @@ import com.example.todo.dto.TodoRequest;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -27,7 +31,11 @@ public class TodoService {
     }
 
     public Todo updateTodo(String id, Todo todo) {
-        todo.setId(id);
-        return todoRepository.save(todo);
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+        if (optionalTodo.isPresent()) {
+            todo.setId(id);
+            return todoRepository.save(todo);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 }

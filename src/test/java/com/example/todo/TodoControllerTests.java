@@ -128,4 +128,13 @@ public class TodoControllerTests {
                 .andExpect(jsonPath("$.done").value(true));
     }
 
+    @Test
+    public void should_reject_update_when_id_not_exist() throws Exception {
+        Todo updatedTodo = new Todo(null, "Buy snacks", true);
+        MockHttpServletRequestBuilder request = put("/todos/999").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(updatedTodo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+    }
+
 }
