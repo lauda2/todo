@@ -1,13 +1,9 @@
 package com.example.todo.service;
 
-import com.example.todo.dto.TodoRequest;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -40,6 +36,11 @@ public class TodoService {
     }
 
     public void deleteTodo(String id) {
-        todoRepository.deleteById(id);
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+        if (optionalTodo.isPresent()) {
+            todoRepository.deleteById(id);
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 }

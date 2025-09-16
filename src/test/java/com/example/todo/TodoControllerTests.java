@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -149,10 +148,18 @@ public class TodoControllerTests {
     public void should_respond_204_when_delete() throws Exception {
         Todo todo = new Todo("123", "Buy bread", false);
         todoRepository.save(todo);
-        MockHttpServletRequestBuilder request = delete("/todos/123").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(todo));
+        MockHttpServletRequestBuilder request = delete("/todos/123").contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void should_respond_404_when_delete_non_exist_todo() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/todos/123").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
     }
 
 }
