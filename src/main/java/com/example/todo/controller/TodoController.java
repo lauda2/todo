@@ -33,4 +33,9 @@ public class TodoController {
         return todoService.createTodo(todoMapper.toEntity(todoRequest));
     }
 
+    @PutMapping("/{id}")
+    public Todo updateTodo(@PathVariable String id, @Valid @RequestBody TodoRequest todoRequest) {
+        return todoService.updateTodo(id, todoMapper.toEntity(todoRequest));
+    }
+
 }

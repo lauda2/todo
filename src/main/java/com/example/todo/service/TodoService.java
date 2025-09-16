@@ -1,8 +1,11 @@
 package com.example.todo.service;
 
+import com.example.todo.dto.TodoRequest;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -20,6 +23,11 @@ public class TodoService {
     }
 
     public Todo createTodo(Todo todo) {
+        return todoRepository.save(todo);
+    }
+
+    public Todo updateTodo(String id, Todo todo) {
+        todo.setId(id);
         return todoRepository.save(todo);
     }
 }
