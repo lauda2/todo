@@ -114,4 +114,18 @@ public class TodoControllerTests {
                 .andExpect(jsonPath("$.done").value(true));
     }
 
+    @Test
+    public void should_ignore_id_when_update() throws Exception {
+        Todo todo = new Todo("123", "Buy bread", false);
+        todoRepository.save(todo);
+        Todo updatedTodo = new Todo("456", "Buy snacks", true);
+        MockHttpServletRequestBuilder request = put("/todos/123").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(updatedTodo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.text").value("Buy snacks"))
+                .andExpect(jsonPath("$.done").value(true));
+    }
+
 }
