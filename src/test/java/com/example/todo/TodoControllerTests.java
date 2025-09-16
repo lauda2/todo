@@ -137,4 +137,12 @@ public class TodoControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void should_reject_when_update_empty() throws Exception {
+        MockHttpServletRequestBuilder request = put("/todos/123").contentType(MediaType.APPLICATION_JSON).content("{}");
+
+        mockMvc.perform(request)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
 }
