@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import com.example.todo.entity.Todo;
+import com.example.todo.mapper.TodoMapper;
 import com.example.todo.repository.TodoRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +68,15 @@ public class TodoControllerTests {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.text").value("Buy milk"))
                 .andExpect(jsonPath("$.done").value(false));
+    }
+
+    @Test
+    public void should_reject_when_empty_text() throws Exception {
+        Todo todo = new Todo(null, "", false);
+        MockHttpServletRequestBuilder request = post("/todos").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(todo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isUnprocessableEntity());
     }
 
 }
