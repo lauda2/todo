@@ -1,7 +1,6 @@
 package com.example.todo;
 
 import com.example.todo.entity.Todo;
-import com.example.todo.mapper.TodoMapper;
 import com.example.todo.repository.TodoRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.not;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -86,6 +86,18 @@ public class TodoControllerTests {
 
         mockMvc.perform(request)
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void should_ignore_id_when_post_id() throws Exception {
+        Todo todo = new Todo("client-sent", "Buy bread", false);
+        MockHttpServletRequestBuilder request = post("/todos").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(todo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(not("client-sent")))
+                .andExpect(jsonPath("$.text").value("Buy bread"))
+                .andExpect(jsonPath("$.done").value(false));
     }
 
 }
