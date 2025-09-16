@@ -2,6 +2,7 @@ package com.example.todo;
 
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TodoControllerTests {
+
+    private final Gson gson = new Gson();
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +55,18 @@ public class TodoControllerTests {
                 .andExpect(jsonPath("$[0].id").exists())
                 .andExpect(jsonPath("$[0].text").value("Buy milk"))
                 .andExpect(jsonPath("$[0].done").value(false));
+    }
+
+    @Test
+    public void should_create_todo_when_post_todo() throws Exception {
+        Todo todo = new Todo(null, "Buy milk", false);
+        MockHttpServletRequestBuilder request = post("/todos").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(todo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.text").value("Buy milk"))
+                .andExpect(jsonPath("$.done").value(false));
     }
 
 }
