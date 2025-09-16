@@ -79,4 +79,13 @@ public class TodoControllerTests {
                 .andExpect(status().isUnprocessableEntity());
     }
 
+    @Test
+    public void should_reject_when_miss_text() throws Exception {
+        Todo todo = new Todo(null, null, false);
+        MockHttpServletRequestBuilder request = post("/todos").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(todo));
+
+        mockMvc.perform(request)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
 }
