@@ -10,9 +10,15 @@ import java.util.List;
 @RequestMapping("/todos")
 public class TodoController {
 
+    private final TodoRepository todoRepository;
+
+    public TodoController(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
     @GetMapping
     public List<Todo> getTodoList() {
-        return List.of();
+        return todoRepository.findAll();
     }
 
 }
