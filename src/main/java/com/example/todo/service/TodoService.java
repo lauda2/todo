@@ -38,4 +38,8 @@ public class TodoService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
+    public void deleteTodo(String id) {
+        todoRepository.deleteById(id);
+    }
 }

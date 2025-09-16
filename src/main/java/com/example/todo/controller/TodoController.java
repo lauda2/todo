@@ -38,4 +38,10 @@ public class TodoController {
         return todoService.updateTodo(id, todoMapper.toEntity(todoRequest));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteTodo(@PathVariable String id) {
+        todoService.deleteTodo(id);
+    }
+
 }
